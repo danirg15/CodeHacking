@@ -2,10 +2,11 @@
 
 namespace App;
 
+use App\Role;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     /**
      * The attributes that are mass assignable.
      *
@@ -23,4 +24,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    public function role(){
+        return $this->belongsTo('App\Role');
+    }
+
+
+
 }
