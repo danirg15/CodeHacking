@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Http\Requests;
 use App\Http\Requests\UsersRequest;
+
 use App\User;
 use App\Role;
-use App\Http\Requests;
+use App\Photo;
 
 class AdminUsersController extends Controller {
     /**
@@ -37,7 +38,19 @@ class AdminUsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(UsersRequest $request) {
-        return $request->all();
+        
+        if ($file = $request->file('photo')) {
+            $name = Photo::generateRandomName($file);
+            
+            $file->move('images', $name);
+
+            //$photo = Photo::create(['path'=>$name]);
+
+
+            //User::create($request->all());
+        }
+        //
+        //return redirect('/admin/users');
     }
 
     /**

@@ -26,7 +26,6 @@ class UsersRequest extends Request {
             'password'=>'required',
             'email'=>'required',
             'role_id'=>'required',
-            'is_active'=>'required'
         ];
     }
 }

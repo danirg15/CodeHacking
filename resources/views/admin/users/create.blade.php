@@ -8,7 +8,7 @@
 <br>
 
 
-<form action="/admin/users" method="POST">
+<form action="/admin/users" method="POST" enctype="multipart/form-data">
     <!-- {{method_field('')}} -->
     {{ csrf_field() }}
 
@@ -33,6 +33,11 @@
             @endforeach
         </select>
     </div>
+    <div class="form-group">
+        <label>Photo</label>
+        <input type="file" name="photo">
+    </div>
+
     <div class="checkbox">
         <label><input type="checkbox" name="is_active" value="1"> Active</label>
     </div>
