@@ -7,43 +7,37 @@
 @include('includes/form_error')
 <br>
 
-
-<form action="/admin/users" method="POST" enctype="multipart/form-data">
-    <!-- {{method_field('')}} -->
-    {{ csrf_field() }}
+{!! Form::open(['method'=>'POST', 'action'=>'AdminUsersController@store', 'files'=>true]) !!}
 
     <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" class="form-control">
+        {!! Form::label('name', 'Name') !!}
+        {!! Form::text('name', null, ['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control">
+        {!! Form::label('email', 'Email') !!}
+        {!! Form::email('email', null, ['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" class="form-control">
+        {!! Form::label('password', 'Password') !!}
+        {!! Form::password('password', ['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
-        <label>Role</label>
-        <select class="form-control" name="role_id">
-            <option value="">Choose</option>
-            @foreach($roles as $role)
-                <option value="{{$role->id}}">{{$role->name}}</option>
-            @endforeach
-        </select>
+        {!! Form::label('role_id', 'Role') !!}
+        {!! Form::select('role_id', $roles, null, ['class'=>'form-control']) !!}
+    </div>
+     <div class="form-group">
+        {!! Form::label('photo', 'Photo') !!}
+        {!! Form::file('photo', null, ['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
-        <label>Photo</label>
-        <input type="file" name="photo">
+        {!! Form::checkbox('is_active', 1) !!}
+        {!! Form::label('is_active', 'Active') !!}
     </div>
-
-    <div class="checkbox">
-        <label><input type="checkbox" name="is_active" value="1"> Active</label>
+    <div class="form-group">
+        {!! Form::submit('Submit', ['class'=>'btn btn-primary']) !!}
     </div>
     
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+{!! Form::close() !!}
 
 
 

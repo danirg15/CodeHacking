@@ -27,7 +27,7 @@ class AdminUsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $roles = Role::all();
+        $roles = Role::lists('name','id')->all();
         return view('admin/users/create', ['roles'=>$roles]);
     }
 
@@ -37,20 +37,21 @@ class AdminUsersController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsersRequest $request) {
-        
+    public function store(Request $request) {
+        $input = $request->all();
+        $input['password'] = bcrypt($request->password);
+
         if ($file = $request->file('photo')) {
             $name = Photo::generateRandomName($file);
-            
             $file->move('images', $name);
 
-            //$photo = Photo::create(['path'=>$name]);
-
-
-            //User::create($request->all());
+            $photo = Photo::create(['path'=>$name]);
+            $input['photo_id'] = $photo->id;
         }
-        //
-        //return redirect('/admin/users');
+
+        User::create($input);
+
+        return redirect('/admin/users');
     }
 
     /**
@@ -70,9 +71,10 @@ class AdminUsersController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+        $user = User::findOrFail($id);
+        $roles = Role::lists('name','id')->all();
+        return view('/admin/users/edit', ['user' => $user, 'roles' => $roles]); 
     }
 
     /**
