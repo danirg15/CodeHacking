@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use Auth;
 use Closure;
 
-class Admin
-{
+class Admin {
     /**
      * Handle an incoming request.
      *
@@ -13,8 +12,15 @@ class Admin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        return $next($request);
+    public function handle($request, Closure $next) {
+
+        if (Auth::check() && 
+            Auth::user()->isAdmin() && 
+            Auth::user()->isActive()) {
+            
+            return $next($request);
+        }
+
+        return abort(401);
     }
 }
