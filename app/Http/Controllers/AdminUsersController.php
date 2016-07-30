@@ -37,16 +37,12 @@ class AdminUsersController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(UsersRequest $request) {
         $input = $request->all();
         $input['password'] = bcrypt($request->password);
 
-        if ($file = $request->file('photo')) {
-            $name = Photo::generateRandomName($file);
-            $file->move('images', $name);
-
-            $photo = Photo::create(['path'=>$name]);
-            $input['photo_id'] = $photo->id;
+        if ($request->hasFile('photo')){ 
+           $input['photo_id'] = $this->uploadPhoto($request) or NULL;
         }
 
         User::create($input);
@@ -84,9 +80,17 @@ class AdminUsersController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(UsersRequest $request, $id) {
+        $input = $request->all();
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('photo')){ 
+           $input['photo_id'] = $this->uploadPhoto($request) or NULL;
+        }
+        
+        $user->update($input);
+        
+        return redirect('/admin/users'); 
     }
 
     /**
@@ -99,4 +103,21 @@ class AdminUsersController extends Controller {
     {
         //
     }
+
+
+
+    /**Helper**/
+
+    public function uploadPhoto(Request $request){
+
+        if ($file = $request->file('photo')) {
+            $name = Photo::generateRandomName($file);
+            $file->move('images', $name);
+            $photo = Photo::create(['path'=>$name]);
+            return $photo->id;
+        }
+
+        return NULL;
+    }
+
 }
