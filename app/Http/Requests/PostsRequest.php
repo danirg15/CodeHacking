@@ -25,7 +25,7 @@ class PostsRequest extends Request
         return [
             'title'         =>'required',
             'body'          =>'required',
-            // 'category_id'   =>'required',
+            'category_id'   =>'required',
             'photo'         =>'required'
         ];
     }
