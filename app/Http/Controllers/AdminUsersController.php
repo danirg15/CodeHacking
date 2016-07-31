@@ -100,7 +100,10 @@ class AdminUsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        User::findOrFail($id)->delete();
+        $user = User::findOrFail($id);
+        unlink(public_path() . $user->photo->path);
+        $user->delete();
+        
         return redirect('/admin/users'); 
     }
 
