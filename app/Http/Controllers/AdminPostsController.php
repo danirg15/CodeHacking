@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Post;
+use App\Photo;
+use App\Http\Requests\PostsRequest;
 use App\Http\Requests;
+use Auth;
 
-class AdminPostsController extends Controller
-{
+class AdminPostsController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index() {
+        $posts = Post::all();
+        return view('/admin/posts/index', ['posts'=>$posts]);
     }
 
     /**
@@ -23,9 +25,8 @@ class AdminPostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create() {
+        return view('/admin/posts/create');
     }
 
     /**
@@ -34,9 +35,13 @@ class AdminPostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(PostsRequest $request) {
+        $input = $request->all();
+        $input['photo_id'] = Photo::uploadPhoto($request);
+
+        Auth::user()->posts()->create($input);
+
+        return redirect('/admin/posts');
     }
 
     /**
@@ -45,8 +50,7 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -56,9 +60,8 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+
     }
 
     /**

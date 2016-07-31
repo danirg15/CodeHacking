@@ -2,17 +2,25 @@
 
 namespace App;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Hash;
 
 class Photo extends Model {
 
-    protected $directory = '/images/';
+    protected static $directory = '/images/';
 
     protected $fillable = [
         'path'
-    ];
+    ];    
 
+    public function getPathAttribute($path){
+        return Photo::$directory . $path;
+    }
+
+    /**Helper**/
+    public static function getPlaceholderImage(){
+        return Photo::$directory . 'placeholder.png';
+    }
 
     public static function generateRandomName($file){
         $name = md5(time() . $file->getClientOriginalName());
@@ -20,8 +28,16 @@ class Photo extends Model {
         return $name;
     }
 
-    public function getPathAttribute($path){
-        return $this->directory . $path;
+    public static function uploadPhoto(Request $request){
+
+        if ($file = $request->file('photo')) {
+            $name = Photo::generateRandomName($file);
+            $file->move('images', $name);
+            $photo = Photo::create(['path'=>$name]);
+            return $photo->id;
+        }
+
+        return NULL;
     }
 
 }

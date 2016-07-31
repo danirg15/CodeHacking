@@ -42,7 +42,7 @@ class AdminUsersController extends Controller {
         $input['password'] = bcrypt($request->password);
 
         if ($request->hasFile('photo')){ 
-           $input['photo_id'] = $this->uploadPhoto($request) or NULL;
+           $input['photo_id'] = Photo::uploadPhoto($request) or NULL;
         }
 
         User::create($input);
@@ -85,7 +85,7 @@ class AdminUsersController extends Controller {
         $user = User::findOrFail($id);
 
         if ($request->hasFile('photo')){ 
-           $input['photo_id'] = $this->uploadPhoto($request) or NULL;
+           $input['photo_id'] = Photo::uploadPhoto($request) or NULL;
         }
         
         $user->update($input);
@@ -109,18 +109,6 @@ class AdminUsersController extends Controller {
 
 
 
-    /**Helper**/
 
-    public function uploadPhoto(Request $request){
-
-        if ($file = $request->file('photo')) {
-            $name = Photo::generateRandomName($file);
-            $file->move('images', $name);
-            $photo = Photo::create(['path'=>$name]);
-            return $photo->id;
-        }
-
-        return NULL;
-    }
 
 }

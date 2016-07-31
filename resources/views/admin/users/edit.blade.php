@@ -8,7 +8,7 @@
 <br>
 
 <div class="col-sm-3">
-    <img src="{{$user->photo->path or ''}}" class="img-responsive img-circle" alt="">
+    <img src="{{$user->photo->path or App\Photo::getPlaceholderImage()}}" class="img-responsive img-circle" alt="">
 </div>
 
 <div class="col-sm-9">
