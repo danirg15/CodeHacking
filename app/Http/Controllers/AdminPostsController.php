@@ -63,7 +63,10 @@ class AdminPostsController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
+        $post = Post::findOrFail($id);
+        $categories = Category::lists('name','id')->all();
 
+        return view('/admin/posts/edit', ['post'=>$post, 'categories'=>$categories]);
     }
 
     /**
@@ -73,9 +76,13 @@ class AdminPostsController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(PostsRequest $request, $id) {
+        $input = $request->all();
+        $input['photo_id'] = Photo::uploadPhoto($request);
+
+        Post::findOrFail($id)->update($input);
+
+        return redirect('/admin/posts');
     }
 
     /**
@@ -84,8 +91,10 @@ class AdminPostsController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id) {
+        Post::findOrFail($id)->delete();
+        Photo::removePhoto($post->photo->id);
+        
+        return redirect('/admin/posts');
     }
 }

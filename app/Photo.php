@@ -40,4 +40,10 @@ class Photo extends Model {
         return NULL;
     }
 
+    public static function removePhoto($photo_id){
+        $photo = Photo::findOrFail($photo_id);
+        unlink(public_path() . $photo->path);
+        $photo->delete();
+    }
+
 }
